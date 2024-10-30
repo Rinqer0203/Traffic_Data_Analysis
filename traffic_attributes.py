@@ -1,4 +1,4 @@
-class AttributeIndex:
+class TrafficAttributes:
     DURATION = 0
     SERVICE = 1
     SOURCE_BYTES = 2
