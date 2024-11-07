@@ -13,7 +13,7 @@ SEARCH_INDEX = TrafficAttributes.IDS_DETECTION
 
 
 def process_file(input_path: str) -> Counter:
-    makedirs('./logs', exist_ok=True)
+    makedirs('.\logs', exist_ok=True)
     counter = Counter()
     search_target_counter = Counter()
 
