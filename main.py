@@ -3,9 +3,12 @@ from collections import Counter
 from traffic_attributes import TrafficAttributes
 
 
+# 検索で絞り込まれたログを保存するファイル
+FILLTERD_TRAFFIC_LOG_PATH = r'.\logs\filtered_traffic.txt'
+# 検索対象の詳細を保存するファイル (検索対象の内容とカウント)
+ATTRIBUTE_DETAILS_LOG_PATH = r'.\logs\attribute_details.txt'
+
 DATA_PATH = r'.\data\20150101.txt'
-FILLTERD_TRAFFIC_LOG_PATH = r'.\logs\filtered_traffic.txt'  # 検索で絞り込まれたログを保存するファイル
-ATTRIBUTE_DETAILS_LOG_PATH = r'.\logs\attribute_details.txt'  # 検索対象の詳細を保存するファイル
 SEARCH_INDEX = TrafficAttributes.IDS_DETECTION
 
 
