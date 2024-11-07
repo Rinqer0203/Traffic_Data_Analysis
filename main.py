@@ -9,7 +9,7 @@ ATTRIBUTE_DETAILS_LOG_PATH = r".\log\attribute_details.txt"  # 検索対象の�
 SEARCH_INDEX = TrafficAttributes.MALWARE_DETECTION
 
 
-def process_file(input_path):
+def process_file(input_path: str) -> Counter:
     makedirs("./log", exist_ok=True)
     counter = Counter()
     search_target_counter = Counter()
