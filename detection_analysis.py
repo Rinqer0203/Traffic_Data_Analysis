@@ -1,6 +1,6 @@
-from os import makedirs
-from typing import NamedTuple
+import os
 from collections import Counter
+from typing import NamedTuple
 from traffic_attributes import TrafficAttributes
 
 
@@ -10,78 +10,81 @@ class Attribute(NamedTuple):
 
 
 DATA_PATH = './data/20150101.txt'
-OUT_DIR = './output'
-LOG_DIR = './logs'
-SEARCH_TARGETS = [Attribute(TrafficAttributes.IDS_DETECTION, 'IDS'),
-                  Attribute(TrafficAttributes.MALWARE_DETECTION, 'MALWARE'),
-                  Attribute(TrafficAttributes.ASHULA_DETECTION, 'ASHULA')]
+OUT_DIR = './output/detection'
+LOG_DIR = './logs/detection'
+SEARCH_TARGETS = [
+    Attribute(TrafficAttributes.IDS_DETECTION, 'IDS'),
+    Attribute(TrafficAttributes.MALWARE_DETECTION, 'MALWARE'),
+    Attribute(TrafficAttributes.ASHULA_DETECTION, 'ASHULA')
+]
+
+os.makedirs(LOG_DIR, exist_ok=True)
+os.makedirs(OUT_DIR, exist_ok=True)
+
+
+def update_counter(line: str, total_counter: Counter, target_counters: list, target_detail_counters: list) -> None:
+    items = line.split('\t')
+    total_counter['total_traffic'] += 1
+    if items[TrafficAttributes.LABEL] != '1':
+        total_counter['total_attack'] += 1
+
+    for i, target in enumerate(SEARCH_TARGETS):
+        if items[target.index] != '0':
+            target_counters[i]['target'] += 1
+            target_detail_counters[i][items[target.index]] += 1
+            if items[TrafficAttributes.LABEL] != '1':
+                target_counters[i]['attack'] += 1
+
+
+def write_detail_logs(detail_counters: list, detail_files: list) -> None:
+    for i, detail_file in enumerate(detail_files):
+        detail_file.write('detail\tcount\n')
+        for target, count in detail_counters[i].items():
+            detail_file.write(f'{target}\t{count}\n')
+
+
+def write_results(total_counter: Counter, target_counters: list) -> None:
+    lines = []
+    for item, count in total_counter.items():
+        lines.append(f'{item} : {count}\n')
+    for i, target in enumerate(SEARCH_TARGETS):
+        if (target_counters[i]["target"] == 0):
+            attack_rate = 0
+        else:
+            attack_rate = target_counters[i]["attack"] / target_counters[i]["target"]
+        lines.append(f'{target.name}\n')
+        lines.append(f'\ttarget : {target_counters[i]["target"]}\n')
+        lines.append(f'\tattack : {target_counters[i]["attack"]}\n')
+        lines.append(f'\tattack rate : {attack_rate:.2f}\n')
+    result_path = f'{OUT_DIR}/result.txt'
+    with open(result_path, 'w') as output:
+        output.writelines(lines)
+    print(''.join(lines))
 
 
 def main():
-    makedirs(LOG_DIR, exist_ok=True)
-    makedirs(OUT_DIR, exist_ok=True)
-
-    # トラフィック全体のカウンタ
     total_counter = Counter()
-    # 検索属性ごとのカウンタ
     target_counters = [Counter() for _ in SEARCH_TARGETS]
-    # 検索属性ごとの詳細カウンタ
     target_detail_counters = [Counter() for _ in SEARCH_TARGETS]
 
-    filltered_files = []
-    details_files = []
+    filtered_files = [open(f'{LOG_DIR}/{target.name}_filtered_traffic.txt', 'w') for target in SEARCH_TARGETS]
+    details_files = [open(f'{LOG_DIR}/{target.name}_attribute_details.txt', 'w') for target in SEARCH_TARGETS]
 
     try:
-        # すべてのログを開いとく (finnalyでclose)
-        for target in SEARCH_TARGETS:
-            filltered_files.append(
-                open(f'{LOG_DIR}/{target[1]}_fillterd_traffic.txt', 'w'))
-            details_files.append(
-                open(f'{LOG_DIR}/{target[1]}_attribute_details.txt', 'w'))
-        with open(DATA_PATH, 'r') as input:
-            for line in input:
-                items = line.split('\t')
-                # トラフィック全体のカウンタを更新
-                total_counter['total_traffic'] += 1
-                if items[TrafficAttributes.LABEL] != '1':
-                    total_counter['total_attack'] += 1
-
-                # 検索属性ごとの処理
+        with open(DATA_PATH, 'r') as input_file:
+            for line in input_file:
+                update_counter(line, total_counter, target_counters, target_detail_counters)
+                # 検出されたトラフィックを対応するログに出力
                 for i, target in enumerate(SEARCH_TARGETS):
-                    if items[target.index] != '0':
-                        filltered_files[i].write(line)
-                        target_detail_counters[i][items[target.index]] += 1
+                    if line.split('\t')[target.index] != '0':
+                        filtered_files[i].write(line)
 
-                        # 検索属性ごとのカウンタを更新
-                        target_counters[i]['target'] += 1
-                        if items[TrafficAttributes.LABEL] != '1':
-                            target_counters[i]['attack'] += 1
-
-        # 詳細ログに書き込み
-        for i, target in enumerate(SEARCH_TARGETS):
-            details_files[i].write('detail\tcount\n')
-            for target, count in target_detail_counters[i].items():
-                details_files[i].write(f'{target}\t{count}\n')
-
-        # 結果を出力
-        lines = []
-        for item, count in total_counter.items():
-            lines.append(f'{item} : {count}\n')
-        for i, target in enumerate(SEARCH_TARGETS):
-            lines.append(f'{target.name}\n')
-            lines.append(f'\ttarget : {target_counters[i]["target"]}\n')
-            lines.append(f'\tattack : {target_counters[i]["attack"]}\n')
-            lines.append(f'\tattack rate : {
-                target_counters[i]["attack"] / target_counters[i]["target"]}\n')
-        with open(f'{OUT_DIR}/result.txt', 'w') as output:
-            output.writelines(lines)
-        print(''.join(lines))
+        write_detail_logs(target_detail_counters, details_files)
+        write_results(total_counter, target_counters)
 
     finally:
-        for input in filltered_files:
-            input.close()
-        for input in details_files:
-            input.close()
+        for f in filtered_files + details_files:
+            f.close()
 
 
 if __name__ == '__main__':
