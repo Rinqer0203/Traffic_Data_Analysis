@@ -1,4 +1,6 @@
 log/*
 logs/*
+data/with_header/*
 output/*
 __pycache__/
+tempCodeRunnerFile.py
