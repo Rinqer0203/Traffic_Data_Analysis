@@ -1,12 +1,6 @@
 import os
 from collections import Counter
-from typing import NamedTuple
-from traffic_attributes import TrafficAttributes
-
-
-class Attribute(NamedTuple):
-    index: int
-    name: str
+from utils.traffic_attributes import TrafficAttributes, Attribute
 
 
 DATA_PATH = './data/20150101.txt'
