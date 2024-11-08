@@ -1,8 +1,6 @@
 import os
 from utils.traffic_attributes import TrafficAttributes
 
-# TODO: overload
-
 
 def get_tsv_with_header(input_file: str, output_dir: str | None = None, output_filename: str | None = None) -> str:
     if output_dir is None:
