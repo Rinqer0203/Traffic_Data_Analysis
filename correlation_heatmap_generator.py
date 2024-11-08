@@ -20,11 +20,10 @@ correlation_matrix = selected_data.corr()
 # ヒートマップ作成
 plt.title("Correlation Matrix", fontsize=16)
 plt.figure(figsize=(14, 14))
-sns.heatmap(correlation_matrix, annot=True,
-            cmap='coolwarm', fmt='.2f', linewidths=0.5)
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
+plt.tight_layout()
 
 # plt.show()
 
-plt.tight_layout()
 os.makedirs(os.path.dirname(OUTPUT_IMG_PATH), exist_ok=True)
 plt.savefig(OUTPUT_IMG_PATH)

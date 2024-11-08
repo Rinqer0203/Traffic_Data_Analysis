@@ -4,9 +4,9 @@ from utils.traffic_attributes import TrafficAttributes
 # TODO: overload
 
 
-def get_tsv_with_header(input_file: str, output_dir: str = None, output_filename: str = None) -> str:
+def get_tsv_with_header(input_file: str, output_dir: str | None = None, output_filename: str | None = None) -> str:
     if output_dir is None:
-        output_dir = os.path.dirname(input_file) + r'\with_header'
+        output_dir = os.path.join(os.path.dirname(input_file), 'with_header')
     if output_filename is None:
         output_filename = os.path.basename(input_file)
     output_file = os.path.join(output_dir, output_filename)
