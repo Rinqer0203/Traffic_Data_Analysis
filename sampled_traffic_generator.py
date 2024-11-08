@@ -1,6 +1,6 @@
 import os
 import random
-from utils.traffic_attributes import TrafficAttributes
+from utils.traffic_attributes import TrafficAttr
 
 DATA_PATH = './data/20150101.txt'
 OUT_PATH = './output/sampled_traffic/sampled.txt'
@@ -11,7 +11,7 @@ os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
 def extract_samples_by_label(data_path, label_value, sample_size):
     """指定されたLABELの値に基づいてランダムサンプリングを行う"""
     with open(data_path, 'r') as file:
-        lines = [line.strip() for line in file if line.split('\t')[TrafficAttributes.LABEL] == label_value]
+        lines = [line.strip() for line in file if line.split('\t')[TrafficAttr.LABEL] == label_value]
     return random.sample(lines, min(len(lines), sample_size))
 
 

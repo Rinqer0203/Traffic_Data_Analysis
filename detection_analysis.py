@@ -1,15 +1,15 @@
 import os
 from collections import Counter
-from utils.traffic_attributes import TrafficAttributes, Attribute
+from utils.traffic_attributes import TrafficAttr
 
 
 DATA_PATH = './output/sampled_traffic/sampled.txt'
 OUT_DIR = './output/detection'
 LOG_DIR = './logs/detection'
 SEARCH_TARGETS = [
-    Attribute(TrafficAttributes.IDS_DETECTION, 'IDS'),
-    Attribute(TrafficAttributes.MALWARE_DETECTION, 'MALWARE'),
-    Attribute(TrafficAttributes.ASHULA_DETECTION, 'ASHULA')
+    TrafficAttr.IDS_DETECTION,
+    TrafficAttr.MALWARE_DETECTION,
+    TrafficAttr.ASHULA_DETECTION
 ]
 
 os.makedirs(LOG_DIR, exist_ok=True)
@@ -19,14 +19,14 @@ os.makedirs(OUT_DIR, exist_ok=True)
 def update_counter(line: str, total_counter: Counter, target_counters: list, target_detail_counters: list) -> None:
     items = line.split('\t')
     total_counter['total_traffic'] += 1
-    if items[TrafficAttributes.LABEL] != '1':
+    if items[TrafficAttr.LABEL] != '1':
         total_counter['total_attack'] += 1
 
     for i, target in enumerate(SEARCH_TARGETS):
-        if items[target.index] != '0':
+        if items[target] != '0':
             target_counters[i]['target'] += 1
-            target_detail_counters[i][items[target.index]] += 1
-            if items[TrafficAttributes.LABEL] != '1':
+            target_detail_counters[i][items[target]] += 1
+            if items[TrafficAttr.LABEL] != '1':
                 target_counters[i]['attack'] += 1
 
 
@@ -70,7 +70,7 @@ def main():
                 update_counter(line, total_counter, target_counters, target_detail_counters)
                 # 検出されたトラフィックを対応するログに出力
                 for i, target in enumerate(SEARCH_TARGETS):
-                    if line.split('\t')[target.index] != '0':
+                    if line.split('\t')[target] != '0':
                         filtered_files[i].write(line)
 
         write_detail_logs(target_detail_counters, details_files)

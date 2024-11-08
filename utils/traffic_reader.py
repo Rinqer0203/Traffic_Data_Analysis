@@ -28,20 +28,15 @@
 [22] START_TIME : 00:00:24
 [23] PROTOCOL : tcp
 '''
-from traffic_attributes import TrafficAttributes
+from traffic_attributes import TrafficAttr
 
 
 def main():
     while True:
         print('読みたいトラフィックデータを入力してください...')
         data = input().split('\t')
-        list = TrafficAttributes.get_attribute_list()
         for i, item in enumerate(data):
-            # iからlistのattributeのindexが一致するものを取得
-            # 念の為、item.indexとiが一致するか確認
-            for item in list:
-                if i == item.index:
-                    print(f'[{i}] {item.name} : {data[i]}')
+            print(f'[{i}] {TrafficAttr(i).name} : {item}')
         print('\n')
 
 
