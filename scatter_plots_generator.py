@@ -8,7 +8,6 @@ DATA_PATH = './data/20150101.txt'
 OUTPUT_DIR = './output/label_scatter_plots'
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# データを読み込む
 data = pd.read_csv(tsv_header_adder.get_tsv_with_header(DATA_PATH), delimiter='\t')
 
 # 散布図を作成する属性リスト（LABEL以外の属性）
