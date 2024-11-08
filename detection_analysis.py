@@ -3,7 +3,7 @@ from collections import Counter
 from utils.traffic_attributes import TrafficAttributes, Attribute
 
 
-DATA_PATH = './data/20150101.txt'
+DATA_PATH = './output/sampled_traffic/sampled.txt'
 OUT_DIR = './output/detection'
 LOG_DIR = './logs/detection'
 SEARCH_TARGETS = [
