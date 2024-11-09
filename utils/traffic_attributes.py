@@ -1,4 +1,3 @@
-from typing import NamedTuple
 from enum import IntEnum
 
 
@@ -34,11 +33,10 @@ class TrafficAttr(IntEnum):
 
 if __name__ == '__main__':
     # 簡易テスト
-    list = TrafficAttr.get_attribute_list()
     before_index = -1
-    for item in list:
-        print(f'{item.index}: {item.name}')
-        # before_indexが昇順で連番になっていることを確認
-        assert before_index == item.index - 1, 'Indexに不正があります'
-        before_index = item.index
+    for item in TrafficAttr:
+        print(f'{item}: {item.name}')
+        # before_indexが昇順で連番になっていることをチェック
+        assert before_index == item - 1, 'Indexに不正があります'
+        before_index = item
     print('テストOK')

@@ -12,9 +12,6 @@ SEARCH_TARGETS = [
     TrafficAttr.ASHULA_DETECTION
 ]
 
-os.makedirs(LOG_DIR, exist_ok=True)
-os.makedirs(OUT_DIR, exist_ok=True)
-
 
 def update_counter(line: str, total_counter: Counter, target_counters: list, target_detail_counters: list) -> None:
     items = line.split('\t')
@@ -61,6 +58,8 @@ def main():
     target_counters = [Counter() for _ in SEARCH_TARGETS]
     target_detail_counters = [Counter() for _ in SEARCH_TARGETS]
 
+    os.makedirs(LOG_DIR, exist_ok=True)
+    os.makedirs(OUT_DIR, exist_ok=True)
     filtered_files = [open(f'{LOG_DIR}/{target.name}_filtered_traffic.txt', 'w') for target in SEARCH_TARGETS]
     details_files = [open(f'{LOG_DIR}/{target.name}_attribute_details.txt', 'w') for target in SEARCH_TARGETS]
 

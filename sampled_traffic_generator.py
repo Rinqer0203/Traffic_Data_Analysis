@@ -5,8 +5,6 @@ from utils.traffic_attributes import TrafficAttr
 DATA_PATH = './data/20150101.txt'
 OUT_PATH = './output/sampled_traffic/sampled.txt'
 
-os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
-
 
 def extract_samples_by_label(data_path, label_value, sample_size):
     """指定されたLABELの値に基づいてランダムサンプリングを行う"""
@@ -28,10 +26,13 @@ def main():
     random.shuffle(sampled_data)
 
     # 保存
+    os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, 'w') as f:
         f.write("\n".join(sampled_data))
-
     print(f"Saved {len(sampled_data)} samples to {OUT_PATH}.")
+    print(f"Normal: {len(normal_samples)} samples.")
+    print(f"Known attack: {len(known_attack_samples)} samples.")
+    print(f"Unknown attack: {len(unknown_attack_samples)} samples.")
 
 
 if __name__ == '__main__':

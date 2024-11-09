@@ -22,3 +22,14 @@ def get_tsv_with_header(input_file: str, output_dir: str | None = None, output_f
         outfile.write(infile.read())
 
     return output_file
+
+
+def main():
+    print('ヘッダーを挿入するTSVファイルのパスを入力してください...')
+    input_file = input()
+    path = get_tsv_with_header(input_file)
+    print(f'Saved {path}')
+
+
+if __name__ == '__main__':
+    main()
