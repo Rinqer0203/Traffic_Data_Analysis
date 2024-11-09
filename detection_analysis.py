@@ -1,9 +1,12 @@
+'''
+トラフィックデータの検出結果 (IDS, MALWARE, ASHULA) を集計するスクリプト
+'''
 import os
 from collections import Counter
 from utils.traffic_attributes import TrafficAttr
 
 
-DATA_PATH = './output/sampled_traffic/sampled.txt'
+DATA_PATH = './data/20150101.txt'
 OUT_DIR = './output/detection'
 LOG_DIR = './logs/detection'
 SEARCH_TARGETS = [
@@ -47,7 +50,7 @@ def write_results(total_counter: Counter, target_counters: list) -> None:
         lines.append(f'\ttarget : {target_counters[i]["target"]}\n')
         lines.append(f'\tattack : {target_counters[i]["attack"]}\n')
         lines.append(f'\tattack rate : {attack_rate:.2f}\n')
-    result_path = f'{OUT_DIR}/result.txt'
+    result_path = f'{OUT_DIR}/{os.path.basename(DATA_PATH).replace(".txt", "_detection_result.txt")}'
     with open(result_path, 'w') as output:
         output.writelines(lines)
     print(''.join(lines))
