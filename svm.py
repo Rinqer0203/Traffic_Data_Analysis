@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
-import tsv_header_adder
+from utils.tsv_header_adder import get_tsv_with_header
 from utils.traffic_attributes import TrafficAttr
 
 PATH = './output/sampled_traffic/sampled.txt'
@@ -11,7 +11,7 @@ PATH = './output/sampled_traffic/sampled.txt'
 
 def main():
     # データ読み込み
-    data = pd.read_csv(tsv_header_adder.get_tsv_with_header(PATH), delimiter='\t')
+    data = pd.read_csv(get_tsv_with_header(PATH), delimiter='\t')
 
     # カテゴリカルデータの変換
     categorical_cols = [

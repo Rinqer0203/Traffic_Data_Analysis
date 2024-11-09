@@ -1,5 +1,5 @@
 import os
-from utils.traffic_attributes import TrafficAttr
+from .traffic_attributes import TrafficAttr
 
 
 def get_tsv_with_header(input_file: str, output_dir: str | None = None, output_filename: str | None = None) -> str:
@@ -14,7 +14,6 @@ def get_tsv_with_header(input_file: str, output_dir: str | None = None, output_f
         return output_file
 
     os.makedirs(output_dir, exist_ok=True)
-
     header = TrafficAttr.get_attribute_name_list()
 
     with open(input_file, 'r') as infile, open(output_file, 'w') as outfile:

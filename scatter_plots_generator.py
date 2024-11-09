@@ -2,7 +2,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import os
-import tsv_header_adder
+from utils.tsv_header_adder import get_tsv_with_header
 from utils.traffic_attributes import TrafficAttr
 
 
@@ -12,7 +12,7 @@ OUTPUT_DIR = './output/label_scatter_plots'
 
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    data = pd.read_csv(tsv_header_adder.get_tsv_with_header(DATA_PATH), delimiter='\t')
+    data = pd.read_csv(get_tsv_with_header(DATA_PATH), delimiter='\t')
 
     # 散布図を作成する属性リスト（LABEL以外の属性）
     selected_columns = [

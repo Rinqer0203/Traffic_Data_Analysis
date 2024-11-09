@@ -28,7 +28,7 @@
 [22] START_TIME : 00:00:24
 [23] PROTOCOL : tcp
 '''
-from traffic_attributes import TrafficAttr
+from utils.traffic_attributes import TrafficAttr
 
 
 def main():
