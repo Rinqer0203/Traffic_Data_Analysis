@@ -7,7 +7,7 @@ from sklearn.svm import SVC
 from utils import svm_utils
 
 # データのパス（フォルダでもファイルでも可）
-LOAD_TSV_PATH = './data/201502/Kyoto2016/2015/02'
+LOAD_TSV_PATH = './data/Kyoto2016/2015/01'
 
 # SVMモデルの保存先
 MODEL_SAVE_PATH = './output/svm/svm_model.pkl'

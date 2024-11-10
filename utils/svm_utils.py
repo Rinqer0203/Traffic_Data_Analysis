@@ -27,9 +27,9 @@ CATEGORICAL_FEATURES = [
     # TrafficAttr.IDS_DETECTION.name,
     # TrafficAttr.MALWARE_DETECTION.name,
     # TrafficAttr.ASHULA_DETECTION.name,
-    # TrafficAttr.SERVICE.name,
-    # TrafficAttr.FLAG.name,
-    # TrafficAttr.PROTOCOL.name,
+    TrafficAttr.SERVICE.name,
+    TrafficAttr.FLAG.name,
+    TrafficAttr.PROTOCOL.name,
 ]
 
 

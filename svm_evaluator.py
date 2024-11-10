@@ -6,7 +6,7 @@ import os
 from utils import svm_utils
 
 # 評価するデータのパス (フォルダでもファイルでも可)
-EVALUATE_TSV_PATH = './data/201502/Kyoto2016/2015/02'
+EVALUATE_TSV_PATH = './data/Kyoto2016/2015/02'
 
 # モデル、ダミー変数の列情報、スケーラーのロード先
 MODEL_LOAD_PATH = './output/svm/svm_model.pkl'
