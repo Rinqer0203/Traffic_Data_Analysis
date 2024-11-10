@@ -1,3 +1,4 @@
+from sklearn.model_selection import GridSearchCV
 import pandas as pd
 import joblib
 import os
@@ -9,7 +10,7 @@ from sampled_traffic_generator import get_sampled_data
 from utils.tsv_header_adder import get_tsv_with_header
 from utils.traffic_attributes import TrafficAttr
 
-OUTPUT_PATH = './output/svm/svm_model.pkl'
+GRID_SEARCH_PATH = './output/svm/grid_search_results.pkl'
 
 
 def main():
@@ -37,11 +38,30 @@ def main():
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    # SVMモデルの定義と学習
-    model = SVC(kernel='rbf', C=100, gamma=0.1, random_state=42, verbose=True, max_iter=5000)
-    model.fit(X_train, y_train)
+    # グリッドサーチの実行または読み込み
+    if os.path.exists(GRID_SEARCH_PATH):
+        print("Loading grid search results from file...")
+        grid = joblib.load(GRID_SEARCH_PATH)
+    else:
+        print("Performing grid search...")
+        param_grid = {
+            'C': [0.1, 1, 10, 100],
+            'gamma': [1, 0.1, 0.01, 0.001],
+            'kernel': ['rbf', 'linear']
+        }
+        grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=2, cv=5, n_jobs=-1)
+        grid.fit(X_train, y_train)
+        joblib.dump(grid, GRID_SEARCH_PATH)
+
+    # 最適なモデルの取得
+    model = grid.best_estimator_
+
+    # 最適なパラメータの表示
+    print('Best parameters found: ', grid.best_params_)
+    print('Best cross-validation score: ', grid.best_score_)
 
     # モデルの保存
+    OUTPUT_PATH = './output/svm/svm_model.pkl'
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     joblib.dump(model, OUTPUT_PATH)
     print(f'Saved {OUTPUT_PATH}')
