@@ -1,14 +1,16 @@
+'''
+パラメータ最適化のためのグリッドサーチを行う
+'''
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
-from utils.svm_utils import load_and_preprocess_data, evaluate_model
+from utils import svm_utils
 
 
 def main():
     # データの読み込みと前処理
-    X_train, X_test, y_train, y_test = load_and_preprocess_data()
+    X, y = svm_utils.load_and_preprocess_data()
+    X_train, X_test, y_train, y_test, _ = svm_utils.split_and_scale_data(X, y)
 
-    # グリッドサーチの実行
-    print("Performing grid search...")
     param_grid = {
         'C': [0.1, 1, 10, 100],
         'gamma': [1, 0.1, 0.01, 0.001],
@@ -21,11 +23,11 @@ def main():
     model = grid.best_estimator_
 
     # 最適なパラメータの表示
-    print('Best parameters found: ', grid.best_params_)
-    print('Best cross-validation score: ', grid.best_score_)
+    print('Best parameters : ', grid.best_params_)
+    print('Best score : ', grid.best_score_)
 
     # モデルの評価を出力
-    evaluate_model(model, X_test, y_test)
+    svm_utils.evaluate_model(model, X_test, y_test)
 
 
 if __name__ == '__main__':
