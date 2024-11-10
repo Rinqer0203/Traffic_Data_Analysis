@@ -15,10 +15,6 @@ def get_tsv_with_header(input_file: str, output_path: str | None = None) -> str:
     if output_path is None:
         output_path = os.path.join(os.path.dirname(input_file), 'with_header', os.path.basename(input_file))
 
-    # 既にヘッダーが付与されたファイルが存在する場合はそのファイルパスを返す
-    if os.path.exists(output_path):
-        return output_path
-
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     header = TrafficAttr.get_attribute_name_list()
 
