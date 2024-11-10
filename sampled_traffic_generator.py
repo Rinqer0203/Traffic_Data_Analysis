@@ -11,12 +11,19 @@ OUT_PATH = './output/sampled_traffic/sampled.txt'
 SAMPLED_SIZE = 10000
 
 
-def get_sampled_data() -> str:
+def get_sampled_data(file_path=None) -> str:
     '''
     各LABELのサンプルを取得し、統合して保存する
     '''
+    # サンプリングするデータのファイルパスを決定
+    if file_path is None:
+        data_files = [os.path.join(DATA_DIR, filename) for filename in os.listdir(DATA_DIR)
+                      if os.path.isfile(os.path.join(DATA_DIR, filename))]
+    else:
+        data_files = [file_path]
+
     # 各LABELのサンプルを取得
-    sampled_data = extract_samples(DATA_DIR, SAMPLED_SIZE)
+    sampled_data = extract_samples(data_files, SAMPLED_SIZE)
 
     # サンプルを統合
     all_samples = sampled_data['1'] + sampled_data['-1'] + sampled_data['-2']
@@ -33,16 +40,14 @@ def get_sampled_data() -> str:
     return OUT_PATH
 
 
-def extract_samples(data_dir, sample_size):
+def extract_samples(data_files, sample_size: int) -> dict:
     """各LABELの値に基づいてランダムサンプリングを行う"""
     label_samples = defaultdict(list)
-    for filename in os.listdir(data_dir):
-        file_path = os.path.join(data_dir, filename)
-        if os.path.isfile(file_path):
-            with open(file_path, 'r') as file:
-                for line in file:
-                    label = line.split('\t')[TrafficAttr.LABEL]
-                    label_samples[label].append(line.strip())
+    for file_path in data_files:
+        with open(file_path, 'r') as file:
+            for line in file:
+                label = line.split('\t')[TrafficAttr.LABEL]
+                label_samples[label].append(line.strip())
 
     sampled_data = {
         '1': random.sample(label_samples['1'], min(len(label_samples['1']), sample_size)),
