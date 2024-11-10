@@ -1,25 +1,28 @@
+'''
+モデルの評価を行うスクリプト
+'''
 import joblib
 import os
-import pandas as pd
 from utils import svm_utils
 
-MODEL_SAVE_PATH = './output/svm/svm_model.pkl'
-DUMMY_COLUMNS_SAVE_PATH = './output/svm/dummy_columns.pkl'
-SCALER_SAVE_PATH = './output/svm/scaler.pkl'
+# 評価するデータのパス (フォルダでもファイルでも可)
+EVALUATE_TSV_PATH = './data/201502/Kyoto2016/2015/02'
+
+# モデル、ダミー変数の列情報、スケーラーのロード先
+MODEL_LOAD_PATH = './output/svm/svm_model.pkl'
+DUMMY_COLUMNS_LOAD_PATH = './output/svm/dummy_columns.pkl'
+SCALER_LOAD_PATH = './output/svm/scaler.pkl'
 
 
 def evaluate_saved_model(file_path: str):
     # モデル、ダミー変数の列情報、スケーラーの読み込み
-    if not os.path.exists(MODEL_SAVE_PATH) or not os.path.exists(DUMMY_COLUMNS_SAVE_PATH) or not os.path.exists(SCALER_SAVE_PATH):
+    if not os.path.exists(MODEL_LOAD_PATH) or not os.path.exists(DUMMY_COLUMNS_LOAD_PATH) or not os.path.exists(SCALER_LOAD_PATH):
         print(f"Model, dummy columns, or scaler file not found at {
-              MODEL_SAVE_PATH}, {DUMMY_COLUMNS_SAVE_PATH}, or {SCALER_SAVE_PATH}")
+              MODEL_LOAD_PATH}, {DUMMY_COLUMNS_LOAD_PATH}, or {SCALER_LOAD_PATH}")
         return
-
-    model = joblib.load(MODEL_SAVE_PATH)
-    dummy_columns = joblib.load(DUMMY_COLUMNS_SAVE_PATH)
-    scaler = joblib.load(SCALER_SAVE_PATH)
-    print(f'Loaded model from {MODEL_SAVE_PATH}, dummy columns from {
-          DUMMY_COLUMNS_SAVE_PATH}, and scaler from {SCALER_SAVE_PATH}')
+    model = joblib.load(MODEL_LOAD_PATH)
+    dummy_columns = joblib.load(DUMMY_COLUMNS_LOAD_PATH)
+    scaler = joblib.load(SCALER_LOAD_PATH)
 
     # データの読み込みと前処理
     X, y = svm_utils.load_and_preprocess_data(file_path)
@@ -35,6 +38,4 @@ def evaluate_saved_model(file_path: str):
 
 
 if __name__ == '__main__':
-    # 評価するファイルパスを指定
-    file_path = './data/20150727.txt'
-    evaluate_saved_model(file_path)
+    evaluate_saved_model(EVALUATE_TSV_PATH)
