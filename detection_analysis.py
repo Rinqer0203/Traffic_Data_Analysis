@@ -6,7 +6,7 @@ from collections import Counter
 from utils.traffic_attributes import TrafficAttr
 
 
-DATA_PATH = './data/20150101.txt'
+DATA_PATH = './data/20140111.txt'
 OUT_DIR = './output/detection'
 LOG_DIR = './logs/detection'
 SEARCH_TARGETS = [

@@ -3,39 +3,57 @@
 '''
 import os
 import random
+from collections import defaultdict
 from utils.traffic_attributes import TrafficAttr
 
-DATA_PATH = './data/20150101.txt'
+DATA_DIR = './data'
 OUT_PATH = './output/sampled_traffic/sampled.txt'
+SAMPLED_SIZE = 10000
 
 
-def extract_samples_by_label(data_path, label_value, sample_size):
-    """指定されたLABELの値に基づいてランダムサンプリングを行う"""
-    with open(data_path, 'r') as file:
-        lines = [line.strip() for line in file if line.split('\t')[TrafficAttr.LABEL] == label_value]
-    return random.sample(lines, min(len(lines), sample_size))
-
-
-def main():
-    sample_size = 10000
-
-    # 各ラベルごとにサンプリング
-    normal_samples = extract_samples_by_label(DATA_PATH, '1', sample_size)  # LABEL = 1 (正常)
-    known_attack_samples = extract_samples_by_label(DATA_PATH, '-1', sample_size)  # LABEL = -1 (既知の攻撃)
-    unknown_attack_samples = extract_samples_by_label(DATA_PATH, '-2', sample_size)  # LABEL = -2 (未知の攻撃)
+def get_sampled_data() -> str:
+    '''
+    各LABELのサンプルを取得し、統合して保存する
+    '''
+    # 各LABELのサンプルを取得
+    sampled_data = extract_samples(DATA_DIR, SAMPLED_SIZE)
 
     # サンプルを統合
-    sampled_data = normal_samples + known_attack_samples + unknown_attack_samples
-    random.shuffle(sampled_data)
+    all_samples = sampled_data['1'] + sampled_data['-1'] + sampled_data['-2']
+    random.shuffle(all_samples)
 
     # 保存
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, 'w') as f:
-        f.write("\n".join(sampled_data))
-    print(f"Saved {len(sampled_data)} samples to {OUT_PATH}.")
-    print(f"Normal: {len(normal_samples)} samples.")
-    print(f"Known attack: {len(known_attack_samples)} samples.")
-    print(f"Unknown attack: {len(unknown_attack_samples)} samples.")
+        f.write("\n".join(all_samples))
+    print(f"Saved {len(all_samples)} samples to {OUT_PATH}.")
+    print(f"Normal: {len(sampled_data['1'])} samples.")
+    print(f"Known attack: {len(sampled_data['-1'])} samples.")
+    print(f"Unknown attack: {len(sampled_data['-2'])} samples.")
+    return OUT_PATH
+
+
+def extract_samples(data_dir, sample_size):
+    """各LABELの値に基づいてランダムサンプリングを行う"""
+    label_samples = defaultdict(list)
+    for filename in os.listdir(data_dir):
+        file_path = os.path.join(data_dir, filename)
+        if os.path.isfile(file_path):
+            with open(file_path, 'r') as file:
+                for line in file:
+                    label = line.split('\t')[TrafficAttr.LABEL]
+                    label_samples[label].append(line.strip())
+
+    sampled_data = {
+        '1': random.sample(label_samples['1'], min(len(label_samples['1']), sample_size)),
+        '-1': random.sample(label_samples['-1'], min(len(label_samples['-1']), sample_size)),
+        '-2': random.sample(label_samples['-2'], min(len(label_samples['-2']), sample_size))
+    }
+    return sampled_data
+
+
+def main():
+    get_sampled_data()
 
 
 if __name__ == '__main__':
