@@ -1,3 +1,6 @@
+'''
+LABELと他の属性の散布図を生成するスクリプト
+'''
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt

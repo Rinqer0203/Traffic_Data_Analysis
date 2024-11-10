@@ -1,3 +1,6 @@
+'''
+トラフィックデータからLABELの値に基づいてランダムサンプリングを行うスクリプト
+'''
 import os
 import random
 from utils.traffic_attributes import TrafficAttr

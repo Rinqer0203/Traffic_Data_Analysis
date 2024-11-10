@@ -54,6 +54,7 @@ def write_results(total_counter: Counter, target_counters: list) -> None:
     with open(result_path, 'w') as output:
         output.writelines(lines)
     print(''.join(lines))
+    print(f'Saved {result_path}')
 
 
 def main():
