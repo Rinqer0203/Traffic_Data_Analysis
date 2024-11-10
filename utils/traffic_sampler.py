@@ -11,19 +11,19 @@ OUT_PATH = './output/sampled_traffic/sampled.txt'
 SAMPLED_SIZE = 10000
 
 
-def get_sampled_data(file_path=None) -> str:
+def get_sampled_data(file_path: str | None = None) -> str:
     '''
     各LABELのサンプルを取得し、統合して保存する
     '''
     # サンプリングするデータのファイルパスを決定
     if file_path is None:
-        data_files = [os.path.join(DATA_DIR, filename) for filename in os.listdir(DATA_DIR)
-                      if os.path.isfile(os.path.join(DATA_DIR, filename))]
+        file_path = [os.path.join(DATA_DIR, filename) for filename in os.listdir(DATA_DIR)
+                     if os.path.isfile(os.path.join(DATA_DIR, filename))]
     else:
-        data_files = [file_path]
+        file_path = [file_path]
 
     # 各LABELのサンプルを取得
-    sampled_data = extract_samples(data_files, SAMPLED_SIZE)
+    sampled_data = extract_samples(file_path, SAMPLED_SIZE)
 
     # サンプルを統合
     all_samples = sampled_data['1'] + sampled_data['-1'] + sampled_data['-2']
@@ -37,6 +37,7 @@ def get_sampled_data(file_path=None) -> str:
     print(f"Normal: {len(sampled_data['1'])} samples.")
     print(f"Known attack: {len(sampled_data['-1'])} samples.")
     print(f"Unknown attack: {len(sampled_data['-2'])} samples.")
+
     return OUT_PATH
 
 

@@ -35,9 +35,8 @@ CATEGORICAL_FEATURES = [
 
 def load_and_preprocess_data(file_path: str | None = None):
     data = pd.read_csv(get_tsv_with_header(get_sampled_data(file_path)), delimiter='\t')
-
-    # カテゴリカルデータをダミー変数に変換
-    data = pd.get_dummies(data, columns=CATEGORICAL_FEATURES, drop_first=True)
+    # データ数を表示
+    print(f"Data shape: {data.shape}")
 
     # 不要な特徴量を削除
     all_features = set(TrafficAttr.get_attribute_name_list())
@@ -45,8 +44,13 @@ def load_and_preprocess_data(file_path: str | None = None):
     drop_features = list(all_features - required_features)
     data = data.drop(columns=drop_features)
 
+    # カテゴリカルデータをダミー変数に変換
+    data = pd.get_dummies(data, columns=CATEGORICAL_FEATURES, drop_first=True)
+
     y = data[TrafficAttr.LABEL.name]
     X = data.drop(columns=[TrafficAttr.LABEL.name])
+
+    # print(X.columns)
     return X, y
 
 
