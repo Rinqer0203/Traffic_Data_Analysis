@@ -9,7 +9,7 @@ from utils.tsv_header_adder import get_tsv_with_header
 from utils.traffic_attributes import TrafficAttr
 
 
-DATA_PATH = './data/20150101.txt'
+DATA_PATH = './data/20150120.txt'
 OUTPUT_DIR = './output/label_scatter_plots'
 
 
@@ -43,7 +43,7 @@ def main():
         plt.ylabel('LABEL')
 
         # 画像ファイルのパスを指定
-        output_file = os.path.join(OUTPUT_DIR, f'scatter_{col}_vs_LABEL.png')
+        output_file = f'{OUTPUT_DIR}/scatter_{col}_vs_LABEL.png'
         plt.savefig(output_file)
         print(f'Saved {output_file}')
         plt.close()

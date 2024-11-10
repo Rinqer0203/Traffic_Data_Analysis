@@ -17,14 +17,19 @@ def get_sampled_data(file_path: str | None = None) -> str:
     '''
     # サンプリングするデータのファイルパスを決定
     if file_path is None:
-        file_paths = [os.path.join(DATA_DIR, filename) for filename in os.listdir(DATA_DIR)
-                      if os.path.isfile(os.path.join(DATA_DIR, filename))]
+        file_paths = [f'{DATA_DIR}/{filename}' for filename in os.listdir(DATA_DIR)
+                      if os.path.isfile(f'{DATA_DIR}/{filename}')]
     elif os.path.isdir(file_path):
-        file_paths = [os.path.join(file_path, filename) for filename in os.listdir(file_path)
-                      if os.path.isfile(os.path.join(file_path, filename))]
+        file_paths = [f'{file_path}/{filename}' for filename in os.listdir(file_path)
+                      if os.path.isfile(f'{file_path}/{filename}')]
     else:
         file_paths = [file_path]
-    print(f'file_paths: {file_paths}')
+
+    # サンプリングするデータのファイル名を表示
+    print('Sampling data from...')
+    for path in file_paths:
+        print(os.path.basename(path), end=', ')
+    print()
 
     # 各LABELのサンプルを取得
     sampled_data = extract_samples(file_paths, SAMPLED_SIZE)

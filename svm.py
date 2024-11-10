@@ -25,6 +25,9 @@ def main():
     model = SVC(kernel='rbf', C=100, gamma=0.1, random_state=42, verbose=True, max_iter=5000)
     model.fit(X_train, y_train)
 
+    # モデルの評価を出力
+    svm_utils.evaluate_model(model, X_test, y_test)
+
     # モデル、ダミー変数の列情報、スケーラーの保存
     os.makedirs(os.path.dirname(MODEL_SAVE_PATH), exist_ok=True)
     joblib.dump(model, MODEL_SAVE_PATH)
@@ -33,9 +36,6 @@ def main():
     print(f'Saved {DUMMY_COLUMNS_SAVE_PATH}')
     joblib.dump(scaler, SCALER_SAVE_PATH)
     print(f'Saved {SCALER_SAVE_PATH}')
-
-    # モデルの評価を出力
-    svm_utils.evaluate_model(model, X_test, y_test)
 
 
 if __name__ == '__main__':

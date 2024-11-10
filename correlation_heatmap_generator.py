@@ -8,7 +8,7 @@ import os
 from utils.tsv_header_adder import get_tsv_with_header
 from utils.traffic_attributes import TrafficAttr
 
-DATA_PATH = './data/20150101.txt'
+DATA_PATH = './data/20150120.txt'
 OUTPUT_DIR = './output/correlation_heatmap'
 
 
@@ -50,7 +50,7 @@ def main():
         plt.tight_layout()
 
         # 画像保存
-        output_img_path = os.path.join(OUTPUT_DIR, f'correlation_matrix_{method}.png')
+        output_img_path = f'{OUTPUT_DIR}/correlation_matrix_{method}.png'
         plt.savefig(output_img_path)
         print(f'Saved {output_img_path}')
         plt.close()
