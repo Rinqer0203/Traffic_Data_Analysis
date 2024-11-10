@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from utils.sampled_traffic_generator import get_sampled_data
+from utils.traffic_sampler import get_sampled_data
 from utils.tsv_header_adder import get_tsv_with_header
 from utils.traffic_attributes import TrafficAttr
 from sklearn.metrics import accuracy_score, classification_report

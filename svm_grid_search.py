@@ -1,5 +1,5 @@
 '''
-パラメータ最適化のためのグリッドサーチを行う
+SVMモデルのパラメータ最適化のためのグリッドサーチを行う
 '''
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
